@@ -11,41 +11,34 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
-
-
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "@/store/authSlice";
 
 export function LoginForm({ className, ...props }) {
-  const navigate = useNavigate();
-  const [form, setForm] = useState({ email: "", password: "" });
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-    backend: "",
-  });
-  const [colors, setColors] = useState({ email: "", password: "" });
 
-  // validate client-side khi nhập
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading, error, isLoggedIn } = useSelector((state) => state.auth);
+
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({ email: "", password: "" });
+
+  // if (isLoggedIn) navigate("/dashboard");
+
+
   const validateField = (name, value) => {
     if (name === "email") {
-      if (!value.includes("@")) {
-        setErrors((prev) => ({ ...prev, email: "Email must include @" }));
-        setColors((prev) => ({ ...prev, email: "red" }));
-      } else {
-        setErrors((prev) => ({ ...prev, email: "" }));
-        setColors((prev) => ({ ...prev, email: "green" }));
-      }
+      setErrors((prev) => ({
+        ...prev,
+        email: value.includes("@") ? "" : "Email must include @",
+      }));
     }
     if (name === "password") {
-      if (value.length < 8) {
-        setErrors((prev) => ({
-          ...prev,
-          password: "Password must be at least 8 characters",
-        }));
-        setColors((prev) => ({ ...prev, password: "red" }));
-      } else {
-        setErrors((prev) => ({ ...prev, password: "" }));
-        setColors((prev) => ({ ...prev, password: "green" }));
-      }
+      setErrors((prev) => ({
+        ...prev,
+        password:
+          value.length >= 8 ? "" : "Password must be at least 8 characters",
+      }));
     }
   };
 
@@ -57,28 +50,13 @@ export function LoginForm({ className, ...props }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const res = await fetch("http://localhost:3000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setErrors((prev) => ({
-          ...prev,
-          backend: data.error || "Login failed",
-        }));
-      } else {
-        console.log("Login success:", data);
-        setErrors((prev) => ({ ...prev, backend: "" }));
-        navigate("/dashboard")
-      }
-    } catch (err) {
-      setErrors((prev) => ({ ...prev, backend: "Server error" }));
+    const result = await dispatch(login(form));
+    if (result.meta.requestStatus === "fulfilled") {
+      navigate("/dashboard");
     }
   };
 
+  
   return (
     <div
       className={cn(
@@ -125,7 +103,7 @@ export function LoginForm({ className, ...props }) {
                   placeholder="m@example.com"
                   value={form.email}
                   onChange={handleChange}
-                  style={{ borderColor: colors.email }}
+                  style={{ borderColor: errors.email ? "red" : "" }}
                   className="bg-neutral-800 text-white"
                   required
                 />
@@ -151,7 +129,7 @@ export function LoginForm({ className, ...props }) {
                   type="password"
                   value={form.password}
                   onChange={handleChange}
-                  style={{ borderColor: colors.password }}
+                  style={{ borderColor: errors.password ? "red" : "" }}
                   className="bg-neutral-800 text-white"
                   required
                 />
@@ -161,14 +139,12 @@ export function LoginForm({ className, ...props }) {
               </div>
 
               {/* Backend error */}
-              {errors.backend && (
-                <p className="text-red-500 text-sm text-center">
-                  {errors.backend}
-                </p>
+              {error && (
+                <p className="text-red-500 text-sm text-center">{error}</p>
               )}
 
-              <Button type="submit" className="w-full">
-                Login
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Logging in..." : "Login"}
               </Button>
 
               <div className="text-center text-sm">

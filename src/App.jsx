@@ -1,12 +1,10 @@
-
-import './App.css'
+import "./App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { LoginForm } from './Components/login-form'
-import Dashboard from './Components/dashboard';
-
+import { LoginForm } from "./Components/login-form";
+import Dashboard from "./Components/dashboard";
+import ProtectedRoute from "./Components/ProtectedRoute";
 
 function App() {
-
   return (
     <BrowserRouter>
       <Routes>
@@ -20,10 +18,17 @@ function App() {
           }
         />
 
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
 }
 
-export default App
+export default App;
