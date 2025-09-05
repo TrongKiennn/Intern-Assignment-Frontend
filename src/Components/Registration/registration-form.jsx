@@ -188,7 +188,7 @@ export function RegisterForm({ className, ...props }) {
               <div className="text-center text-sm">
                 Already have an account?{" "}
                 <a
-                  href="#"
+                  href="/auth/login"
                   className="underline underline-offset-4 text-blue-400"
                 >
                   Sign in

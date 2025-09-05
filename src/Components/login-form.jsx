@@ -13,6 +13,9 @@ import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/store/authSlice";
+import { FcGoogle } from "react-icons/fc";
+import { FaFacebook } from "react-icons/fa";
+import PasswordInput from "./Utils/PasswordInput";
 
 export function LoginForm({ className, ...props }) {
   const navigate = useNavigate();
@@ -59,6 +62,12 @@ export function LoginForm({ className, ...props }) {
       }
     }
   }
+
+   const isFormValid =
+     form.email.trim() !== "" &&
+     form.password.trim() !== "" &&
+     !errors.email &&
+     !errors.password;
     return (
       <div
         className={cn(
@@ -77,24 +86,6 @@ export function LoginForm({ className, ...props }) {
           <CardContent>
             <form onSubmit={handleSubmit}>
               <div className="grid gap-6">
-                {/* Social Buttons */}
-                <div className="flex flex-col gap-4">
-                  <Button variant="outline" className="w-full">
-                    Login with Facebook
-                  </Button>
-                  <Button variant="outline" className="w-full">
-                    Login with Google
-                  </Button>
-                </div>
-
-                {/* Divider */}
-                <div className="relative text-center text-sm">
-                  <span className="bg-neutral-900 relative z-10 px-2">
-                    Or continue with
-                  </span>
-                  <div className="absolute inset-0 top-1/2 border-t border-gray-700"></div>
-                </div>
-
                 {/* Email */}
                 <div className="grid gap-3">
                   <Label htmlFor="email">Email</Label>
@@ -118,26 +109,12 @@ export function LoginForm({ className, ...props }) {
                 <div className="grid gap-3">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="password">Password</Label>
-                    <a
-                      href="#"
-                      className="ml-auto text-sm text-blue-400 hover:underline"
-                    >
-                      Forgot your password?
-                    </a>
                   </div>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
+                  <PasswordInput
                     value={form.password}
                     onChange={handleChange}
-                    style={{ borderColor: errors.password ? "red" : "" }}
-                    className="bg-neutral-800 text-white"
-                    required
+                    error={errors.password}
                   />
-                  {errors.password && (
-                    <p className="text-red-500 text-sm">{errors.password}</p>
-                  )}
                 </div>
 
                 {/* Backend error */}
@@ -145,14 +122,44 @@ export function LoginForm({ className, ...props }) {
                   <p className="text-red-500 text-sm text-center">{error}</p>
                 )}
 
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? "Logging in..." : "Login"}
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={!isFormValid}
+                >
+                  Sign in
                 </Button>
+
+                {/* Divider */}
+                <div className="relative text-center text-sm">
+                  <span className="bg-neutral-900 relative z-10 px-2">
+                    Or continue with
+                  </span>
+                  <div className="absolute inset-0 top-1/2 border-t border-gray-700"></div>
+                </div>
+
+                {/* Social Buttons */}
+                <div className="w-full grid grid-cols-2 gap-4">
+                  <Button
+                    variant="outline"
+                    className="flex items-center justify-center gap-2 bg-neutral-900 text-white border border-gray-600 rounded-md py-2"
+                  >
+                    <FaFacebook size={20} />
+                    Facebook
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex items-center justify-center gap-2 bg-neutral-900 text-white border border-gray-600 rounded-md py-2"
+                  >
+                    <FcGoogle size={20} />
+                    Google
+                  </Button>
+                </div>
 
                 <div className="text-center text-sm">
                   Don&apos;t have an account?{" "}
                   <a
-                    href="#"
+                    href="/auth/registration"
                     className="underline underline-offset-4 text-blue-400"
                   >
                     Sign up
