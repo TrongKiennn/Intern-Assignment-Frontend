@@ -5,6 +5,7 @@ import Dashboard from "./Components/dashboard";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import { ThemeProvider } from "./Context/ThemeContext";
 import Onboarding from "./Components/Onboarding";
+import { RegisterForm } from "./Components/Registration/registration-form";
 
 function App() {
   return (
@@ -17,6 +18,15 @@ function App() {
             element={
               <div className="w-screen h-screen flex items-center justify-center bg-black">
                 <LoginForm />
+              </div>
+            }
+          />
+
+          <Route
+            path="/auth/registration"
+            element={
+              <div className="w-screen h-screen flex items-center justify-center bg-black">
+                <RegisterForm />
               </div>
             }
           />
