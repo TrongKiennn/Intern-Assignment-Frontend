@@ -24,7 +24,7 @@ export const login = createAsyncThunk(
 export const refreshAccessToken = createAsyncThunk(
   "auth/refreshtoken",
   async (_, thunkAPI) => {
-     console.log("I'm here");
+ 
      
     const state = thunkAPI.getState();
     const refreshToken = state.auth.refreshToken;
