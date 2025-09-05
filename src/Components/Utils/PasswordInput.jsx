@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Eye, EyeOff, Lock } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Input } from "components/ui/input";
 
 export default function PasswordInput({ value, onChange, error }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -8,7 +8,6 @@ export default function PasswordInput({ value, onChange, error }) {
   return (
     <div className="flex flex-col gap-1">
       <div className="relative w-full">
-
         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
           <Lock size={18} />
         </span>
@@ -24,7 +23,6 @@ export default function PasswordInput({ value, onChange, error }) {
           required
         />
 
-
         <span
           className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400"
           onClick={() => setShowPassword(!showPassword)}
@@ -32,7 +30,6 @@ export default function PasswordInput({ value, onChange, error }) {
           {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
         </span>
       </div>
-
 
       <div className="min-h-[20px]">
         {error && <p className="text-red-500 text-sm">{error}</p>}

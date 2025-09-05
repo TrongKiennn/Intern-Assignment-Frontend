@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "components/ui/button";
 import { useTheme } from "../Context/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
@@ -39,7 +39,6 @@ export default function Onboarding() {
     }
   }, [user]);
 
-
   const [cropModalOpen, setCropModalOpen] = useState(false);
   const [cropImage, setCropImage] = useState(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -62,7 +61,6 @@ export default function Onboarding() {
     setOrg((prev) => ({ ...prev, logo: result.file }));
     setCropModalOpen(false);
   };
-
 
   const initials = useMemo(() => {
     const fromName = (name) => {
@@ -457,10 +455,8 @@ export default function Onboarding() {
               className="ml-auto"
               onClick={async () => {
                 try {
-            
                   setTheme(theme);
 
-               
                   localStorage.setItem(`onboarding_${user.id}`, "true");
 
                   navigate("/dashboard");

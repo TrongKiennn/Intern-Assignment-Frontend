@@ -1,5 +1,5 @@
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "components/ui/card";
+import { Button } from "components/ui/button";
 import { useNavigate } from "react-router-dom";
 
 export default function EmailVerifySuccess() {
@@ -16,7 +16,10 @@ export default function EmailVerifySuccess() {
             Your email has been successfully verified. <br />
             You can log in with your account now.
           </p>
-          <Button className="mt-4 w-full" onClick={() => navigate("/auth/login")}>
+          <Button
+            className="mt-4 w-full"
+            onClick={() => navigate("/auth/login")}
+          >
             Back to log in
           </Button>
         </CardContent>

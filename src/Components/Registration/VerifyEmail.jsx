@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "components/ui/input";
+import { Button } from "components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "components/ui/card";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
 export default function VerifyEmailPage() {

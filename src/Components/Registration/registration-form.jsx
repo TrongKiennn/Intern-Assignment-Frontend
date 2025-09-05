@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils/utils";
-import { Button } from "@/components/ui/button";
+import { Button } from "components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "components/ui/card";
+import { Input } from "components/ui/input";
+import { Label } from "components/ui/label";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
@@ -17,8 +17,6 @@ import PasswordInput from "../Utils/PasswordInput";
 
 export function RegisterForm({ className, ...props }) {
   const navigate = useNavigate();
-
-  
 
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [errors, setErrors] = useState({ name: "", email: "", password: "" });
@@ -46,40 +44,40 @@ export function RegisterForm({ className, ...props }) {
     validateField(name, value);
   };
 
-   const handleSubmit = async (e) => {
-     e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-     try {
-       const res = await fetch("http://localhost:3000/auth/registration", {
-         method: "POST",
-         headers: { "Content-Type": "application/json" },
-         body: JSON.stringify({
-           name: form.name,
-           email: form.email,
-           password: form.password,
-         }),
-       });
+    try {
+      const res = await fetch("http://localhost:3000/auth/registration", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          password: form.password,
+        }),
+      });
 
-       const data = await res.json();
-       if (res.ok) {
-         navigate(`/auth/verify-email?email=${encodeURIComponent(form.email)}`);
-       } else {
-         setServerError(
-           data?.message || "Registration failed. Please try again."
-         );
-       }
-     } catch (err) {
-       console.error(err);
-     }
-   };
+      const data = await res.json();
+      if (res.ok) {
+        navigate(`/auth/verify-email?email=${encodeURIComponent(form.email)}`);
+      } else {
+        setServerError(
+          data?.message || "Registration failed. Please try again."
+        );
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-   const isFormValid =
-     form.name.trim() !== "" &&
-     form.email.trim() !== "" &&
-     form.password.trim() !== "" &&
-     !errors.name &&
-     !errors.email &&
-     !errors.password;
+  const isFormValid =
+    form.name.trim() !== "" &&
+    form.email.trim() !== "" &&
+    form.password.trim() !== "" &&
+    !errors.name &&
+    !errors.email &&
+    !errors.password;
 
   return (
     <div
