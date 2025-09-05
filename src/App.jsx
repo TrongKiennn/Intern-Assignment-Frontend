@@ -43,7 +43,7 @@ function App() {
           />
 
           <Route
-            path="/auth/verify-email"
+            path="/auth/verify-email/success"
             element={
               <div className="w-screen h-screen flex items-center justify-center bg-black">
                 <EmailVerifySuccess />

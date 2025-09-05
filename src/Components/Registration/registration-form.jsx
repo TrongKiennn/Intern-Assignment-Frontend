@@ -50,19 +50,19 @@ export function RegisterForm({ className, ...props }) {
      e.preventDefault();
 
      try {
-       const res = await fetch("/auth/registration", {
+       const res = await fetch("http://localhost:3000/auth/registration", {
          method: "POST",
          headers: { "Content-Type": "application/json" },
          body: JSON.stringify({
-           name: formData.name,
-           email: formData.email,
-           password: formData.password,
+           name: form.name,
+           email: form.email,
+           password: form.password,
          }),
        });
 
        const data = await res.json();
        if (res.ok) {
-         navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
+         navigate(`/auth/verify-email?email=${encodeURIComponent(form.email)}`);
        } else {
          setServerError(
            data?.message || "Registration failed. Please try again."
