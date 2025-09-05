@@ -62,7 +62,7 @@ export function RegisterForm({ className, ...props }) {
 
        const data = await res.json();
        if (res.ok) {
-         navigate(`/verify-otp?email=${encodeURIComponent(formData.email)}`);
+         navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
        } else {
          setServerError(
            data?.message || "Registration failed. Please try again."

@@ -6,6 +6,8 @@ import ProtectedRoute from "./Components/ProtectedRoute";
 import { ThemeProvider } from "./Context/ThemeContext";
 import Onboarding from "./Components/Onboarding";
 import { RegisterForm } from "./Components/Registration/registration-form";
+import VerifyEmailPage from "./Components/Registration/VerifyEmail";
+import EmailVerifySuccess from "./Components/Registration/EmailVerifySuccess";
 
 function App() {
   return (
@@ -27,6 +29,24 @@ function App() {
             element={
               <div className="w-screen h-screen flex items-center justify-center bg-black">
                 <RegisterForm />
+              </div>
+            }
+          />
+
+          <Route
+            path="/auth/verify-email"
+            element={
+              <div className="w-screen h-screen flex items-center justify-center bg-black">
+                <VerifyEmailPage />
+              </div>
+            }
+          />
+
+          <Route
+            path="/auth/verify-email"
+            element={
+              <div className="w-screen h-screen flex items-center justify-center bg-black">
+                <EmailVerifySuccess />
               </div>
             }
           />

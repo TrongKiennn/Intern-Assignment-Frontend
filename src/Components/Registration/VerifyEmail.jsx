@@ -40,7 +40,7 @@ export default function VerifyEmailPage() {
       if (!res.ok) {
         setError(data.message || "Verification failed.");
       } else {
-        alert("Verification successful!");
+        navigate("/verify-email/success");
       }
     } catch (err) {
       setError("Network error.");
@@ -51,10 +51,12 @@ export default function VerifyEmailPage() {
     alert("Resend code to email: " + email);
   };
 
+  const isOTP = otp.every((digit) => digit !== "");
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-black text-white px-4">
       <Card className="bg-neutral-900 text-white w-full max-w-md">
-        <CardHeader className="text-center space-y-2">
+        <CardHeader className=" space-y-2">
           <CardTitle className="text-xl">Please check your email</CardTitle>
           <p className="text-gray-400 text-sm">
             Your registration has been successful. We have sent you an email
@@ -84,7 +86,7 @@ export default function VerifyEmailPage() {
             <p className="text-red-500 text-sm text-center mb-2">{error}</p>
           )}
 
-          <Button onClick={handleVerify} className="w-full">
+          <Button onClick={handleVerify} className="w-full" disabled={!isOTP}>
             Verify
           </Button>
 
