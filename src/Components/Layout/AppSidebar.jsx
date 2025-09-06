@@ -142,6 +142,7 @@ export function AppSidebar() {
                  className="p-2 rounded-md hover:opacity-80"
                  onClick={toggleTheme}
                  aria-label="Toggle theme"
+                 style={{ backgroundColor:sidebarBg }}
                >
                  {isDark ? (
                    <Sun className="size-4" />
