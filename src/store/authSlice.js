@@ -1,7 +1,6 @@
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-
+// Async login
 export const login = createAsyncThunk(
   "auth/login",
   async ({ email, password }, thunkAPI) => {
@@ -13,7 +12,7 @@ export const login = createAsyncThunk(
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Login failed");
-      return data; // { accessToken, refreshToken, user }
+      return data; // { accessToken, refreshToken, user: {id, name, email} }
     } catch (err) {
       return thunkAPI.rejectWithValue(err.message);
     }
@@ -24,8 +23,6 @@ export const login = createAsyncThunk(
 export const refreshAccessToken = createAsyncThunk(
   "auth/refreshtoken",
   async (_, thunkAPI) => {
- 
-     
     const state = thunkAPI.getState();
     const refreshToken = state.auth.refreshToken;
     if (!refreshToken) throw new Error("No refresh token");
@@ -42,8 +39,14 @@ export const refreshAccessToken = createAsyncThunk(
   }
 );
 
+const getUserFromLocalStorage = () => {
+  const user = localStorage.getItem("user");
+  return user ? JSON.parse(user) : null;
+};
+
+// Initial state
 const initialState = {
-  user: null,
+  user: getUserFromLocalStorage(),
   accessToken: localStorage.getItem("accessToken") || null,
   refreshToken: localStorage.getItem("refreshToken") || null,
   isLoggedIn: !!localStorage.getItem("accessToken"),
@@ -51,6 +54,7 @@ const initialState = {
   error: null,
 };
 
+// Slice
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -62,6 +66,7 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user");
     },
   },
   extraReducers: (builder) => {
@@ -72,12 +77,22 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
+        state.user = action.payload.user; // {id, name, email}
         state.accessToken = action.payload.accessToken;
         state.refreshToken = action.payload.refreshToken;
         state.isLoggedIn = true;
+
+       
         localStorage.setItem("accessToken", action.payload.accessToken);
         localStorage.setItem("refreshToken", action.payload.refreshToken);
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            id: action.payload.user.id,
+            name: action.payload.user.name,
+            email: action.payload.user.email,
+          })
+        );
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;

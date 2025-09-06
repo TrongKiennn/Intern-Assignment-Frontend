@@ -122,7 +122,7 @@ export function LoginForm({ className, ...props }) {
                 <p className="text-red-500 text-sm text-center">{error}</p>
               )}
 
-              <Button type="submit" className="w-full" disabled={!isFormValid}>
+              <Button type="submit" className="w-full text-white" disabled={!isFormValid}>
                 Sign in
               </Button>
 

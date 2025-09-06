@@ -147,7 +147,7 @@ export function RegisterForm({ className, ...props }) {
                 />
               </div>
 
-              <Button type="submit" className="w-full" disabled={!isFormValid}>
+              <Button type="submit" className="w-full text-white" disabled={!isFormValid}>
                 Sign up
               </Button>
 

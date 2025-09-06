@@ -11,16 +11,14 @@ import EmailVerifySuccess from "./Components/Registration/EmailVerifySuccess";
 import Dashboard from "./Components/Dashboard/Dashboard";
 import AuthLayout from "./Components/Layout/AuthLayout";
 import AppShell from "./Components/Layout/AppShell";
-
+import VerifyEmailLink from "./Components/Registration/VerifyEmailByLink";
 
 export default function App() {
   return (
     <ThemeProvider>
       <BrowserRouter>
         <Routes>
-
           <Route path="/" element={<Navigate to="/dashboard" />} />
-
 
           <Route
             path="/auth/login"
@@ -46,6 +44,15 @@ export default function App() {
               </AuthLayout>
             }
           />
+
+          <Route
+            path="/auth/verify-email/link"
+            element={
+              <AuthLayout>
+                <VerifyEmailLink />
+              </AuthLayout>
+            }
+          />
           <Route
             path="/auth/verify-email/success"
             element={
@@ -62,9 +69,16 @@ export default function App() {
               </AuthLayout>
             }
           />
-         
+
           <Route element={<AppShell />}>
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
           </Route>
         </Routes>
       </BrowserRouter>
