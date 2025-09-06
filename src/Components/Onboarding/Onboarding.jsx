@@ -400,7 +400,7 @@ export default function Onboarding() {
             </Button>
           ) : (
             <Button
-              className="ml-auto"
+              className="ml-auto text-white"
               onClick={async () => {
                 try {
                   localStorage.setItem(`onboarding_${user.id}`, "true");

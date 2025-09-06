@@ -81,9 +81,7 @@ export default function VerifyEmailPage() {
     }
   };
 
-  const handleResend = () => {
-    alert("Resend code to email: " + email);
-  };
+
 
   const isOTP = otp.every((digit) => digit !== "");
 
@@ -123,14 +121,13 @@ export default function VerifyEmailPage() {
             <p className="text-red-500 text-sm text-center mb-2">{error}</p>
           )}
 
-          <Button onClick={handleVerify} className="w-full" disabled={!isOTP}>
+          <Button onClick={handleVerify} className="w-full text-white" disabled={!isOTP}>
             Verify
           </Button>
 
           <div className="text-center text-sm mt-3">
             Didn’t receive an email?{" "}
             <button
-              onClick={handleResend}
               className="text-blue-400 underline underline-offset-4"
             >
               Resend
