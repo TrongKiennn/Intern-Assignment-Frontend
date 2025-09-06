@@ -24,6 +24,7 @@ import {
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { useTheme } from "../context/ThemeProvider";
+import { useEffect, useState } from "react";
 
 // Icon helper
 function Icon({ as: As, className = "size-5 align-middle" }) {
@@ -82,172 +83,184 @@ export function AppSidebar() {
   const btnGap = isCollapsed ? "gap-0" : "gap-3";
   const btnPx = isCollapsed ? "px-0" : "px-3";
   const aGap = isCollapsed ? "gap-0 justify-center" : "gap-3";
+  const [profile,setProfile]=useState(null)
+   useEffect(() => {
+     const token = localStorage.getItem("accessToken");
+     if (!token) return;
 
-  return (
-    <Sidebar
-      side="left"
-      variant="sidebar"
-      collapsible="icon"
-      style={{
-        backgroundColor: sidebarBg,
-        color: sidebarText,
-        ["--sidebar"]: sidebarBg,
-        ["--sidebar-foreground"]: sidebarText,
-        ["--sidebar-border"]: borderColor,
-        ["--sidebar-accent"]: accentColor,
-        ["--sidebar-accent-foreground"]: sidebarText,
-      }}
-    >
-      <SidebarContent className="flex h-full flex-col">
-        {/* Header */}
-        <div
-          className={`flex items-center gap-3 px-4 py-4 ${
-            isCollapsed ? "justify-center" : ""
-          }`}
-        >
-          <AvatarInitials
-            name={user?.name || "Guest"}
-            bg={isDark ? "#222" : "#ddd"}
-            text={sidebarText}
-          />
-          {!isCollapsed && (
-            <>
-              <div className="min-w-0 flex-1">
-                <div className="text-lg font-semibold leading-tight truncate">
-                  {user?.name || "Guest"}
-                </div>
-                {user?.email && (
-                  <div className="text-xs opacity-70 truncate">
-                    {user.email}
-                  </div>
-                )}
-              </div>
-              {/* Toggle theme */}
-              <button
-                className="p-2 rounded-md hover:opacity-80"
-                onClick={toggleTheme}
-                aria-label="Toggle theme"
-                style={{ color: sidebarText, background:sidebarBg }}
-              >
-                {isDark ? (
-                  <Sun className="size-4" />
-                ) : (
-                  <Moon className="size-4" />
-                )}
-              </button>
-            </>
-          )}
-        </div>
+     fetch("http://localhost:3000/me", {
+       headers: {
+         Authorization: `Bearer ${token}`,
+       },
+     })
+       .then(async (res) => {
+         if (!res.ok) throw new Error("Unauthorized");
+         const data = await res.json();
+         setProfile(data);
+       })
+       .catch((err) => {
+         console.error("Fetch /me failed:", err);
+         setProfile(null);
+       });
+   }, []);
 
-        <div
-          className="mx-3 mb-2 h-px"
-          style={{ backgroundColor: "var(--sidebar-border)" }}
-        />
+   const displayUser = profile || { name: "Guest", email: "" };
 
-        {/* Navigation */}
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {mainItems.map((item, idx) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    className={`h-10 flex items-center rounded-xl ${btnPx} ${btnGap} transition-colors`}
-                    style={{
-                      background:
-                        idx === 0 ? "var(--sidebar-accent)" : "transparent",
-                      color: sidebarText,
-                    }}
-                  >
-                    <a
-                      href={item.url}
-                      className={`flex items-center w-full ${aGap}`}
-                    >
-                      <item.icon className="size-5 shrink-0 align-middle" />
-                      <span
-                        className={`${
-                          isCollapsed ? "sr-only" : "text-base leading-none"
-                        }`}
-                      >
-                        {item.title}
-                      </span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+   return (
+     <Sidebar
+       side="left"
+       variant="sidebar"
+       collapsible="icon"
+       className="bg-white text-black dark:bg-black dark:text-white transition-colors"
+     >
+       <SidebarContent className="flex h-full flex-col">
+         {/* Header */}
+         <div
+           className={`flex items-center gap-3 px-4 py-4 ${
+             isCollapsed ? "justify-center" : ""
+           }`}
+         >
+           <AvatarInitials
+             name={displayUser.name}
+             bg={isDark ? "#222" : "#ddd"}
+             text={isDark ? "white" : "black"}
+           />
+           {!isCollapsed && (
+             <>
+               <div className="min-w-0 flex-1">
+                 <div className="text-lg font-semibold truncate">
+                   {displayUser.name}
+                 </div>
+                 {displayUser.email && (
+                   <div className="text-xs opacity-70 truncate">
+                     {displayUser.email}
+                   </div>
+                 )}
+               </div>
+               {/* Toggle theme */}
+               <button
+                 className="p-2 rounded-md hover:opacity-80"
+                 onClick={toggleTheme}
+                 aria-label="Toggle theme"
+               >
+                 {isDark ? (
+                   <Sun className="size-4" />
+                 ) : (
+                   <Moon className="size-4" />
+                 )}
+               </button>
+             </>
+           )}
+         </div>
 
-        {/* Favorites */}
-        <SidebarGroup>
-          {!isCollapsed && (
-            <SidebarGroupLabel className="px-4 opacity-80 text-sm">
-              Favorites
-            </SidebarGroupLabel>
-          )}
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {favoriteItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    className={`h-10 flex items-center rounded-xl ${btnPx} ${btnGap} transition-colors`}
-                    style={{ background: "transparent", color: sidebarText }}
-                  >
-                    <a
-                      href={item.url}
-                      className={`flex items-center w-full ${aGap}`}
-                    >
-                      <Icon as={item.icon} className="size-5 align-middle" />
-                      <span
-                        className={`${
-                          isCollapsed ? "sr-only" : "text-base leading-none"
-                        }`}
-                      >
-                        {item.title}
-                      </span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+         <div
+           className="mx-3 mb-2 h-px"
+           style={{ backgroundColor: "var(--sidebar-border)" }}
+         />
 
-        {/* Bottom */}
-        <div className="mt-auto">
-          <div
-            className="mx-3 mb-2 h-px"
-            style={{ backgroundColor: "var(--sidebar-border)" }}
-          />
+         {/* Navigation */}
+         <SidebarGroup>
+           <SidebarGroupContent>
+             <SidebarMenu>
+               {mainItems.map((item, idx) => (
+                 <SidebarMenuItem key={item.title}>
+                   <SidebarMenuButton
+                     asChild
+                     className={`h-10 flex items-center rounded-xl ${btnPx} ${btnGap} transition-colors`}
+                     style={{
+                       background:
+                         idx === 0 ? "var(--sidebar-accent)" : "transparent",
+                       color: sidebarText,
+                     }}
+                   >
+                     <a
+                       href={item.url}
+                       className={`flex items-center w-full ${aGap}`}
+                     >
+                       <item.icon className="size-5 shrink-0 align-middle" />
+                       <span
+                         className={`${
+                           isCollapsed ? "sr-only" : "text-base leading-none"
+                         }`}
+                       >
+                         {item.title}
+                       </span>
+                     </a>
+                   </SidebarMenuButton>
+                 </SidebarMenuItem>
+               ))}
+             </SidebarMenu>
+           </SidebarGroupContent>
+         </SidebarGroup>
 
-          <div
-            className={`flex items-center gap-3 px-4 py-4 ${
-              isCollapsed ? "justify-center" : ""
-            }`}
-          >
-            <AvatarInitials
-              name={user?.name || "K"}
-              bg={isDark ? "#222" : "#ddd"}
-              text={sidebarText}
-            />
-            {!isCollapsed && (
-              <>
-                <div className="min-w-0 flex-1">
-                  <div className="text-sm font-medium leading-tight truncate">
-                    {user?.name || "Guest"}
-                  </div>
-                  <div className="text-xs opacity-70 truncate">
-                    {user?.email || "—"}
-                  </div>
-                </div>
-               
-              </>
-            )}
-          </div>
-        </div>
-      </SidebarContent>
-    </Sidebar>
-  );
+         {/* Favorites */}
+         <SidebarGroup>
+           {!isCollapsed && (
+             <SidebarGroupLabel className="px-4 opacity-80 text-sm">
+               Favorites
+             </SidebarGroupLabel>
+           )}
+           <SidebarGroupContent>
+             <SidebarMenu>
+               {favoriteItems.map((item) => (
+                 <SidebarMenuItem key={item.title}>
+                   <SidebarMenuButton
+                     asChild
+                     className={`h-10 flex items-center rounded-xl ${btnPx} ${btnGap} transition-colors`}
+                     style={{ background: "transparent", color: sidebarText }}
+                   >
+                     <a
+                       href={item.url}
+                       className={`flex items-center w-full ${aGap}`}
+                     >
+                       <Icon as={item.icon} className="size-5 align-middle" />
+                       <span
+                         className={`${
+                           isCollapsed ? "sr-only" : "text-base leading-none"
+                         }`}
+                       >
+                         {item.title}
+                       </span>
+                     </a>
+                   </SidebarMenuButton>
+                 </SidebarMenuItem>
+               ))}
+             </SidebarMenu>
+           </SidebarGroupContent>
+         </SidebarGroup>
+
+         {/* Bottom */}
+         <div className="mt-auto">
+           <div
+             className="mx-3 mb-2 h-px"
+             style={{ backgroundColor: "var(--sidebar-border)" }}
+           />
+
+           <div
+             className={`flex items-center gap-3 px-4 py-4 ${
+               isCollapsed ? "justify-center" : ""
+             }`}
+           >
+             <AvatarInitials
+               name={displayUser?.name || "K"}
+               bg={isDark ? "#222" : "#ddd"}
+               text={sidebarText}
+             />
+             {!isCollapsed && (
+               <>
+                 <div className="min-w-0 flex-1">
+                   <div className="text-sm font-medium leading-tight truncate">
+                     {displayUser?.name || "Guest"}
+                   </div>
+                   <div className="text-xs opacity-70 truncate">
+                     {displayUser?.email || "—"}
+                   </div>
+                 </div>
+               </>
+             )}
+           </div>
+         </div>
+       </SidebarContent>
+     </Sidebar>
+   );
 }
