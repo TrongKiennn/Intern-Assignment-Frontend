@@ -17,7 +17,7 @@ export default function EmailVerifySuccess() {
             You can log in with your account now.
           </p>
           <Button
-            className="mt-4 w-full"
+            className="mt-4 w-full text-white"
             onClick={() => navigate("/auth/login")}
           >
             Back to log in

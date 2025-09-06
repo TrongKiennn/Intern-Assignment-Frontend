@@ -1,7 +1,7 @@
 import ContactCard from "./ContactCard";
 
 const mostVisited = [
-  { name: "Disney", count:0 },
+  { name: "Disney", count: 0 },
   { name: "Marie Jones", count: 1 },
   { name: "Mateo Jensen", count: 0 },
   { name: "Sofia Muller", count: 0 },

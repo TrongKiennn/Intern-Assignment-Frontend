@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Button } from "components/ui/button";
-import { useTheme } from "../../Context/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
 import { useSelector } from "react-redux";
@@ -17,11 +16,6 @@ export default function Onboarding() {
     email: "example@gmail.com",
     avatar: null,
   });
-
-  const [theme, setLocalTheme] = useState(
-    localStorage.getItem("theme") || "dark"
-  );
-  const { setTheme } = useTheme();
 
   const [org, setOrg] = useState({ name: "", slug: "", logo: null });
   const [teamInvites, setTeamInvites] = useState([
@@ -84,8 +78,6 @@ export default function Onboarding() {
     setProfile((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleThemeChange = (newTheme) => setLocalTheme(newTheme);
-
   const handleOrgChange = (e) => {
     const { name, value } = e.target;
     setOrg((prev) => ({ ...prev, [name]: value }));
@@ -103,7 +95,7 @@ export default function Onboarding() {
 
   const renderProgress = () => (
     <div className="flex items-center gap-2 mb-6">
-      {[1, 2, 3, 4].map((i) => (
+      {[1, 2, 3].map((i) => (
         <div
           key={i}
           className={`h-1 flex-1 rounded ${
@@ -205,48 +197,6 @@ export default function Onboarding() {
           <div>
             {renderProgress()}
             <h2 className="text-xl font-semibold mb-2 text-white">
-              Choose your theme
-            </h2>
-            <p className="text-gray-400 mb-6">
-              Select the theme for the application. You&apos;ll be able to
-              change this later.
-            </p>
-            <div className="flex gap-6 justify-center">
-              <div
-                onClick={() => handleThemeChange("light")}
-                className={`w-24 h-24 border rounded flex flex-col items-center justify-center cursor-pointer ${
-                  theme === "light" ? "border-white" : "border-gray-600"
-                }`}
-                style={{ backgroundColor: "white", color: "black" }}
-              >
-                <span className="text-lg font-bold">Aa</span>
-                <span className="text-sm">Light</span>
-                {theme === "light" && (
-                  <div className="mt-1 w-2 h-2 rounded-full bg-black"></div>
-                )}
-              </div>
-              <div
-                onClick={() => handleThemeChange("dark")}
-                className={`w-24 h-24 border rounded flex flex-col items-center justify-center cursor-pointer ${
-                  theme === "dark" ? "border-white" : "border-gray-600"
-                }`}
-                style={{ backgroundColor: "black", color: "white" }}
-              >
-                <span className="text-lg font-bold">Aa</span>
-                <span className="text-sm">Dark</span>
-                {theme === "dark" && (
-                  <div className="mt-1 w-2 h-2 rounded-full bg-white"></div>
-                )}
-              </div>
-            </div>
-          </div>
-        );
-
-      case 3:
-        return (
-          <div>
-            {renderProgress()}
-            <h2 className="text-xl font-semibold mb-2 text-white">
               Add your organization
             </h2>
             <p className="text-white mb-6">
@@ -269,7 +219,7 @@ export default function Onboarding() {
                   </div>
                 )}
 
-                {/* Icon thùng rác nhỏ ở góc dưới phải nếu đã có ảnh */}
+                {/* Icon xóa logo */}
                 {org.logo && (
                   <div
                     onClick={(e) => {
@@ -306,7 +256,6 @@ export default function Onboarding() {
               />
             </div>
 
-            {/* Mô tả */}
             <div className="mb-4 text-center">
               <p className="text-sm text-white">Upload your logo</p>
               <p className="text-xs text-gray-400">
@@ -314,7 +263,6 @@ export default function Onboarding() {
               </p>
             </div>
 
-            {/* Form Fields */}
             <div className="space-y-4 text-white">
               <input
                 name="name"
@@ -338,7 +286,6 @@ export default function Onboarding() {
               </p>
             </div>
 
-            {/* Modal Crop ảnh */}
             {cropModalOpen &&
               createPortal(
                 <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center">
@@ -375,7 +322,8 @@ export default function Onboarding() {
               )}
           </div>
         );
-      case 4:
+
+      case 3:
         return (
           <div>
             {renderProgress()}
@@ -446,7 +394,7 @@ export default function Onboarding() {
               Back
             </Button>
           )}
-          {step < 4 ? (
+          {step < 3 ? (
             <Button className="ml-auto text-white" onClick={handleNext}>
               Next step →
             </Button>
@@ -455,10 +403,7 @@ export default function Onboarding() {
               className="ml-auto"
               onClick={async () => {
                 try {
-                  setTheme(theme);
-
                   localStorage.setItem(`onboarding_${user.id}`, "true");
-
                   navigate("/dashboard");
                 } catch (error) {
                   console.error("Failed to complete onboarding:", error);

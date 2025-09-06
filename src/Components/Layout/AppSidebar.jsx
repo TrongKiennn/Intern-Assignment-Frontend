@@ -1,15 +1,14 @@
-// components/AppSidebar.js
 import { useSelector } from "react-redux";
 import {
   Home,
   Inbox,
   Settings as SettingsIcon,
-  Plus,
-  MessageSquareMore,
   ChevronDown,
   UserRound,
+  Sun,
+  Moon,
 } from "lucide-react";
-import { useTheme } from "../../Context/ThemeContext";
+
 import {
   Sidebar,
   SidebarContent,
@@ -22,18 +21,17 @@ import {
   useSidebar,
 } from "components/ui/sidebar";
 
-
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
-
+import { useTheme } from "../context/ThemeProvider";
 
 // Icon helper
 function Icon({ as: As, className = "size-5 align-middle" }) {
   return <As className={className} />;
 }
 
-// Avatar luôn tròn, không co méo
-function AvatarInitials({ name, className = "" }) {
+// Avatar luôn tròn
+function AvatarInitials({ name, className = "", bg = "#222", text = "white" }) {
   const initials = name
     ? name
         .trim()
@@ -47,8 +45,8 @@ function AvatarInitials({ name, className = "" }) {
       className={`shrink-0 flex-none aspect-square size-9 rounded-full overflow-hidden
                   flex items-center justify-center font-semibold select-none ${className}`}
       style={{
-        background: "var(--sidebar-accent)",
-        color: "var(--sidebar-accent-foreground)",
+        background: bg,
+        color: text,
       }}
     >
       {initials}
@@ -69,14 +67,18 @@ const favoriteItems = [
 
 export function AppSidebar() {
   const user = useSelector((s) => s.auth.user);
-  const { sidebarBg, sidebarText } = useTheme();
   const { state } = useSidebar?.() || { state: "expanded" };
   const isCollapsed = state === "collapsed";
 
+  // theme context
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === "dark";
 
-  
+  const sidebarBg = isDark ? "black" : "white";
+  const sidebarText = isDark ? "white" : "black";
+  const borderColor = isDark ? "hsl(0 0% 100% / 0.15)" : "hsl(0 0% 0% / 0.15)";
+  const accentColor = isDark ? "hsl(0 0% 100% / 0.1)" : "hsl(0 0% 0% / 0.05)";
 
-  // lớp tiện dụng để không lặp code
   const btnGap = isCollapsed ? "gap-0" : "gap-3";
   const btnPx = isCollapsed ? "px-0" : "px-3";
   const aGap = isCollapsed ? "gap-0 justify-center" : "gap-3";
@@ -91,8 +93,8 @@ export function AppSidebar() {
         color: sidebarText,
         ["--sidebar"]: sidebarBg,
         ["--sidebar-foreground"]: sidebarText,
-        ["--sidebar-border"]: "hsl(0 0% 100% / 0.08)",
-        ["--sidebar-accent"]: "hsl(0 0% 100% / 0.06)",
+        ["--sidebar-border"]: borderColor,
+        ["--sidebar-accent"]: accentColor,
         ["--sidebar-accent-foreground"]: sidebarText,
       }}
     >
@@ -103,7 +105,11 @@ export function AppSidebar() {
             isCollapsed ? "justify-center" : ""
           }`}
         >
-          <AvatarInitials name={user?.name || "Guest"} />
+          <AvatarInitials
+            name={user?.name || "Guest"}
+            bg={isDark ? "#222" : "#ddd"}
+            text={sidebarText}
+          />
           {!isCollapsed && (
             <>
               <div className="min-w-0 flex-1">
@@ -116,17 +122,21 @@ export function AppSidebar() {
                   </div>
                 )}
               </div>
+              {/* Toggle theme */}
               <button
-                className="p-2 rounded-md hover:opacity-90"
-                aria-label="Workspace menu"
-                style={{ color: "currentColor" }}
+                className="p-2 rounded-md hover:opacity-80"
+                onClick={toggleTheme}
+                aria-label="Toggle theme"
+                style={{ color: sidebarText, background:sidebarBg }}
               >
-                <ChevronDown className="size-4" />
+                {isDark ? (
+                  <Sun className="size-4" />
+                ) : (
+                  <Moon className="size-4" />
+                )}
               </button>
             </>
           )}
-
-
         </div>
 
         <div
@@ -142,23 +152,18 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    className={`h-10 flex items-center rounded-xl ${btnPx} ${btnGap} transition-colors
-                                ${isCollapsed ? "justify-center" : ""}`}
+                    className={`h-10 flex items-center rounded-xl ${btnPx} ${btnGap} transition-colors`}
                     style={{
                       background:
                         idx === 0 ? "var(--sidebar-accent)" : "transparent",
-                      color: "currentColor",
+                      color: sidebarText,
                     }}
                   >
                     <a
                       href={item.url}
                       className={`flex items-center w-full ${aGap}`}
                     >
-                      <item.icon
-                        className={`size-5 shrink-0 align-middle ${
-                          isCollapsed ? "mx-auto" : ""
-                        }`}
-                      />
+                      <item.icon className="size-5 shrink-0 align-middle" />
                       <span
                         className={`${
                           isCollapsed ? "sr-only" : "text-base leading-none"
@@ -187,20 +192,14 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    className={`h-10 flex items-center rounded-xl ${btnPx} ${btnGap} transition-colors hover:opacity-90
-                                ${isCollapsed ? "justify-center" : ""}`}
-                    style={{ background: "transparent", color: "currentColor" }}
+                    className={`h-10 flex items-center rounded-xl ${btnPx} ${btnGap} transition-colors`}
+                    style={{ background: "transparent", color: sidebarText }}
                   >
                     <a
                       href={item.url}
                       className={`flex items-center w-full ${aGap}`}
                     >
-                      <Icon
-                        as={item.icon}
-                        className={`${
-                          isCollapsed ? "mx-auto" : ""
-                        } size-5 align-middle`}
-                      />
+                      <Icon as={item.icon} className="size-5 align-middle" />
                       <span
                         className={`${
                           isCollapsed ? "sr-only" : "text-base leading-none"
@@ -223,13 +222,16 @@ export function AppSidebar() {
             style={{ backgroundColor: "var(--sidebar-border)" }}
           />
 
-          {/* User row */}
           <div
             className={`flex items-center gap-3 px-4 py-4 ${
               isCollapsed ? "justify-center" : ""
             }`}
           >
-            <AvatarInitials name={user?.name || "K"} />
+            <AvatarInitials
+              name={user?.name || "K"}
+              bg={isDark ? "#222" : "#ddd"}
+              text={sidebarText}
+            />
             {!isCollapsed && (
               <>
                 <div className="min-w-0 flex-1">
@@ -240,13 +242,7 @@ export function AppSidebar() {
                     {user?.email || "—"}
                   </div>
                 </div>
-                <button
-                  className="p-2 rounded-md hover:opacity-90"
-                  aria-label="Account"
-                  style={{ color: "currentColor" }}
-                >
-                  <UserRound className="size-4" />
-                </button>
+               
               </>
             )}
           </div>

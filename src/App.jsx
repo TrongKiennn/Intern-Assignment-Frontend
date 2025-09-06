@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { LoginForm } from "./Components/Login/login-form";
 
 import ProtectedRoute from "./Components/ProtectedRoute";
-import { ThemeProvider } from "./Context/ThemeContext";
+
 import Onboarding from "./Components/Onboarding/Onboarding";
 import { RegisterForm } from "./Components/Registration/registration-form";
 import VerifyEmailPage from "./Components/Registration/VerifyEmail";
@@ -12,6 +12,7 @@ import Dashboard from "./Components/Dashboard/Dashboard";
 import AuthLayout from "./Components/Layout/AuthLayout";
 import AppShell from "./Components/Layout/AppShell";
 import VerifyEmailLink from "./Components/Registration/VerifyEmailByLink";
+import { ThemeProvider } from "./Components/Context/ThemeProvider";
 
 export default function App() {
   return (
