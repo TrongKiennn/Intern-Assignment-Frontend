@@ -1,13 +1,14 @@
 // import "./App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { LoginForm } from "./Components/login-form";
-import Dashboard from "./Components/dashboard";
+import { LoginForm } from "./Components/Login/login-form";
+
 import ProtectedRoute from "./Components/ProtectedRoute";
 import { ThemeProvider } from "./Context/ThemeContext";
-import Onboarding from "./Components/Onboarding";
+import Onboarding from "./Components/Onboarding/Onboarding";
 import { RegisterForm } from "./Components/Registration/registration-form";
 import VerifyEmailPage from "./Components/Registration/VerifyEmail";
 import EmailVerifySuccess from "./Components/Registration/EmailVerifySuccess";
+import Dashboard from "./Components/Dashboard/Dashboard";
 
 function App() {
   return (
@@ -62,9 +63,12 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
+              // <ProtectedRoute>
+              //   <Dashboard />
+              // </ProtectedRoute>
+              <ThemeProvider>
                 <Dashboard />
-              </ProtectedRoute>
+              </ThemeProvider>
             }
           />
         </Routes>

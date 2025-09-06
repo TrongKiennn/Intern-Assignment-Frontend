@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Button } from "components/ui/button";
-import { useTheme } from "../Context/ThemeContext";
+import { useTheme } from "../../Context/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
 import { useSelector } from "react-redux";
 import Cropper from "react-easy-crop";
-import { getCroppedImg } from "../lib/utils/cropImage";
+import { getCroppedImg } from "../../lib/utils/cropImage";
 
 export default function Onboarding() {
   const user = useSelector((state) => state.auth.user);

@@ -12,10 +12,10 @@ import { Input } from "components/ui/input";
 import { Label } from "components/ui/label";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../store/authSlice";
+import { login } from "../../store/authSlice";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
-import PasswordInput from "./Utils/PasswordInput";
+import PasswordInput from "../Utils/PasswordInput";
 
 export function LoginForm({ className, ...props }) {
   const navigate = useNavigate();
