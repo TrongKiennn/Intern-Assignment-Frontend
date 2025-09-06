@@ -1,5 +1,6 @@
-import { store } from "@/store/store";
-import { refreshAccessToken, logout } from "@/store/authSlice";
+
+import { store } from "../../store/store";
+import { refreshAccessToken, logout } from "../../store/authSlice";
 
 export async function fetchWithAuth(url, options = {}) {
   let accessToken = store.getState().auth.accessToken;
